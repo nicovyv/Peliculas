@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Pelicula_MVC.Data;
+using Peliculas_MVC.Data;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,27 @@ builder.Services.AddDbContext<PeliculaDbContext>(options =>
 
 
 var app = builder.Build();
+
+// invocar la ejecucion del dbseeder con un using scope
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    try
+    {
+        var context = services.GetRequiredService<PeliculaDbContext>();
+        DbSeeder.Seed(context);
+
+    }
+    catch (Exception ex)
+    {
+        // Manejar la excepción si ocurre algún error durante la migración
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocurrió un error al aplicar las migraciones de la base de datos.");
+    }
+}
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
