@@ -1,14 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
+using Pelicula_MVC.Data;
 using Peliculas_MVC.Models;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 namespace Peliculas_MVC.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ILogger<HomeController> _logger;
+        private readonly PeliculaDbContext _context;
+
+        public HomeController(ILogger<HomeController> logger, PeliculaDbContext context)
         {
-            return View();
+            _logger = logger;
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var peliculas = await _context.Peliculas.ToListAsync();
+            return View(peliculas);
         }
 
         public IActionResult Privacy()
