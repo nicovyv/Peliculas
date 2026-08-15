@@ -19,9 +19,21 @@ namespace Peliculas_MVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string user)
+        public async Task<IActionResult> Login(LoginViewModel usuario)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(usuario.Email, usuario.Clave, usuario.Recordarme, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Error al iniciar sesión.");
+                }
+            }
+            return View(usuario);
         }
 
         public IActionResult Registro()

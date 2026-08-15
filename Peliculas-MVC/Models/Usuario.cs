@@ -40,4 +40,17 @@ namespace Peliculas_MVC.Models
         [PasswordPropertyText]
         public string ConfirmarClave { get; set; }
     }
+
+
+    public class LoginViewModel
+    {
+        [Required(ErrorMessage = "El correo electrónico es obligatorio.")]
+        [EmailAddress(ErrorMessage = "El correo electrónico no es válido.")]
+        public string Email { get; set; }
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
+        [PasswordPropertyText]
+        public string Clave { get; set; }
+        public bool Recordarme { get; set; }
+    }
+
 }

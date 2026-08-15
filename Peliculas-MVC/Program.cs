@@ -21,7 +21,7 @@ builder.Services.AddDbContext<PeliculaDbContext>(options =>
 //add identity
 builder.Services.AddIdentityCore<Usuario>(options =>
     {
-        options.SignIn.RequireConfirmedAccount = true;
+        options.SignIn.RequireConfirmedAccount = false;
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequireUppercase = false;
         options.Password.RequiredLength = 3;
