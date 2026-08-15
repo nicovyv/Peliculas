@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Usuario> SignInManager
+
+<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -37,6 +41,29 @@
                         </li>
                     </ul>
                 </div>
+
+                <!-- comentario -->
+                @if (SignInManager.IsSignedIn(User))
+                    {
+                    <li class="nav-item">
+                        <a class="btn btn-primary" asp-area="" asp-controller="Usuario" asp-action="MiPerfil">Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <form asp-area="" asp-controller="Usuario" asp-action="Logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-link nav-link">Cerrar sesión</button>
+                        </form>
+                    </li>
+                    }
+                    else
+                    {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Usuario" asp-action="Login">Iniciar sesión</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Usuario" asp-action="Registro">Registrarse</a>
+                    </li>
+                    }
+
             </div>
         </nav>
     </header>

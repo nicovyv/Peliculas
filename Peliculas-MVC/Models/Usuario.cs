@@ -31,13 +31,15 @@ namespace Peliculas_MVC.Models
         [StringLength(100)]
         public string Apellido { get; set; }
 
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "El correo electrónico es obligatorio.")]
+        [EmailAddress(ErrorMessage = "El correo electrónico no es válido.")]
         public string Email { get; set; }
-        [Required]
-        [PasswordPropertyText]
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
+        [DataType(DataType.Password)]
         public string Clave { get; set; }
-        [PasswordPropertyText]
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
+        [DataType(DataType.Password)]
+        [Compare("Clave", ErrorMessage = "Las contraseñas no coinciden.")]
         public string ConfirmarClave { get; set; }
     }
 
@@ -48,7 +50,7 @@ namespace Peliculas_MVC.Models
         [EmailAddress(ErrorMessage = "El correo electrónico no es válido.")]
         public string Email { get; set; }
         [Required(ErrorMessage = "La contraseña es obligatoria.")]
-        [PasswordPropertyText]
+        [DataType(DataType.Password)]
         public string Clave { get; set; }
         public bool Recordarme { get; set; }
     }
