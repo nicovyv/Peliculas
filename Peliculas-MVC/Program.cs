@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Pelicula_MVC.Data;
 using Peliculas_MVC.Data;
+using Peliculas_MVC.Models;
+using Microsoft.AspNetCore.Identity;
 
 
 
@@ -16,6 +18,31 @@ builder.Services.AddDbContext<PeliculaDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("PeliculaDbContext")));
 
+//add identity
+builder.Services.AddIdentityCore<Usuario>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 3;
+    })
+    .AddEntityFrameworkStores<PeliculaDbContext>()
+    .AddRoles<IdentityRole>()
+    .AddSignInManager();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+})
+    .AddIdentityCookies();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.SlidingExpiration = true;
+    options.LoginPath = "/Usuario/Login";
+    options.AccessDeniedPath = "/Usuario/AccessDenied";
+});
 
 
 
