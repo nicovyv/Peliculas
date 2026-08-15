@@ -26,8 +26,8 @@ builder.Services.AddIdentityCore<Usuario>(options =>
         options.Password.RequireUppercase = false;
         options.Password.RequiredLength = 3;
     })
-    .AddEntityFrameworkStores<PeliculaDbContext>()
     .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<PeliculaDbContext>()
     .AddSignInManager();
 
 builder.Services.AddAuthentication(options =>
@@ -81,6 +81,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthorization();
 app.UseAuthorization();
 
 app.MapStaticAssets();
