@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Peliculas_MVC.Models;
 
@@ -45,7 +46,7 @@ namespace Peliculas_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Registro(UsuarioViewModel usuario)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var nuevoUsuario = new Usuario
                 {
@@ -84,6 +85,69 @@ namespace Peliculas_MVC.Controllers
         {
             return View();
         }
+        [Authorize]
+        public async Task<IActionResult> MiPerfil()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var model = new MiPerfilViewModel
+            {
+                Nombre = user.Nombre,
+                Apellido = user.Apellido,
+                Email = user.Email,
+                ImagenUrlPerfil = user.ImagenUrlPerfil
+            };
+
+            return View(model);
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MiPerfil(MiPerfilViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                user.Nombre = model.Nombre;
+                user.Apellido = model.Apellido;
+
+
+
+                var result = await _userManager.UpdateAsync(user);
+
+
+                if(result.Succeeded)
+                {
+                    ViewBag.Message = "Perfil actualizado correctamente.";
+                    return View(model);
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+
+
+            }
+
+
+            return View(model);
+        }
+
+
 
     }
 }

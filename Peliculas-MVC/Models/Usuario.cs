@@ -55,4 +55,18 @@ namespace Peliculas_MVC.Models
         public bool Recordarme { get; set; }
     }
 
+    public class MiPerfilViewModel
+    {
+
+        public string Nombre { get; set; }
+
+        public string Apellido { get; set; }
+
+        public string? Email { get; set; }
+
+        public string? ImagenUrlPerfil { get; set; }
+    }
+
+
+
 }
