@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Peliculas_MVC.Models;
+using Peliculas_MVC.Service;
 
 namespace Peliculas_MVC.Controllers
 {
@@ -9,10 +10,12 @@ namespace Peliculas_MVC.Controllers
     {
         private readonly UserManager<Usuario> _userManager;
         private readonly SignInManager<Usuario> _signInManager;
-        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager)
+        private readonly ImagenStorage _imagenStorage;
+        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ImagenStorage imagenStorage)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _imagenStorage = imagenStorage;
         }
         public IActionResult Login()
         {
@@ -94,6 +97,10 @@ namespace Peliculas_MVC.Controllers
                 return NotFound();
             }
 
+
+
+
+
             var model = new MiPerfilViewModel
             {
                 Nombre = user.Nombre,
@@ -118,6 +125,26 @@ namespace Peliculas_MVC.Controllers
                 {
                     return NotFound();
                 }
+
+                try
+                {
+                    if (model.ImagenUrlPerfil is not null && model.ImagenUrlPerfil.Length > 0)
+                    {
+                        // opcional: borrar la anterior (si no es placeholder)
+                        if (!string.IsNullOrWhiteSpace(user.ImagenUrlPerfil))
+                            await _imagenStorage.DeleteAsync(user.ImagenUrlPerfil);
+
+                        var nuevaRuta = await _imagenStorage.SaveAsync(user.Id, model.ImagenPerfil);
+                        user.ImagenUrlPerfil = nuevaRuta;
+                        model.ImagenUrlPerfil = nuevaRuta;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    return View(model);
+                }
+
 
                 user.Nombre = model.Nombre;
                 user.Apellido = model.Apellido;

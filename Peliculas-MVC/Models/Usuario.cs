@@ -64,6 +64,7 @@ namespace Peliculas_MVC.Models
 
         public string? Email { get; set; }
 
+        public IFormFile? ImagenPerfil { get; set; }
         public string? ImagenUrlPerfil { get; set; }
     }
 

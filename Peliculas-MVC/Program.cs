@@ -3,6 +3,8 @@ using Pelicula_MVC.Data;
 using Peliculas_MVC.Data;
 using Peliculas_MVC.Models;
 using Microsoft.AspNetCore.Identity;
+using Peliculas_MVC.Service;
+using Microsoft.AspNetCore.Http.Features;
 
 
 
@@ -44,6 +46,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Usuario/AccessDenied";
 });
 
+
+builder.Services.AddScoped<ImagenStorage>();
+builder.Services.Configure<FormOptions>(o => { o.MultipartBodyLengthLimit = 2 * 1024 * 1024; });
 
 
 
