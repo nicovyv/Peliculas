@@ -4,6 +4,7 @@ using Peliculas_MVC.Models;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace Peliculas_MVC.Controllers
 {
@@ -70,11 +71,25 @@ namespace Peliculas_MVC.Controllers
             }
             var pelicula = await _context.Peliculas
                 .Include(p => p.Genero)
+                .Include(p => p.ListaReviews)
+                .ThenInclude(r => r.Usuario)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (pelicula == null)
             {
                 return NotFound();
             }
+
+
+            ViewBag.UserReview = false;
+            if(User?.Identity?.IsAuthenticated == true && pelicula.ListaReviews != null)
+            {
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                ViewBag.UserReview = !(pelicula.ListaReviews.FirstOrDefault(r => r.UsuarioId == userId) == null);
+            }
+
+
+
+
             return View(pelicula);
         }
 
