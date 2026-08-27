@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Peliculas_MVC.Models;
 using Pelicula_MVC.Data;
+using Microsoft.AspNetCore.Authorization;
 
+
+[Authorize (Roles = "Admin")]
 public class PeliculaController : Controller
 {
     private readonly PeliculaDbContext _context;

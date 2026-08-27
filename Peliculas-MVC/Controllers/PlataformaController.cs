@@ -1,9 +1,11 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Peliculas_MVC.Models;
 using Pelicula_MVC.Data;
+using Peliculas_MVC.Models;
 
+[Authorize(Roles = "Admin")]
 public class PlataformaController : Controller
 {
     private readonly PeliculaDbContext _context;

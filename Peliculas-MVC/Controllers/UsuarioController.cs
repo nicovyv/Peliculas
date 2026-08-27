@@ -11,12 +11,15 @@ namespace Peliculas_MVC.Controllers
         private readonly UserManager<Usuario> _userManager;
         private readonly SignInManager<Usuario> _signInManager;
         private readonly ImagenStorage _imagenStorage;
+
+
         public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ImagenStorage imagenStorage)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _imagenStorage = imagenStorage;
         }
+       
         public IActionResult Login()
         {
             return View();
@@ -57,7 +60,7 @@ namespace Peliculas_MVC.Controllers
                     Email = usuario.Email,
                     Nombre = usuario.Nombre,
                     Apellido = usuario.Apellido,
-                    ImagenUrlPerfil = "default-profile.png" // Asignar una imagen de perfil predeterminada
+                    ImagenUrlPerfil = "/images/default-avatar.png" // Asignar una imagen de perfil predeterminada
                 };
                 var resultado = await _userManager.CreateAsync(nuevoUsuario, usuario.Clave);
                 if (resultado.Succeeded)

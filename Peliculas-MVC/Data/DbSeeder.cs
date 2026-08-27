@@ -6,9 +6,38 @@ namespace Peliculas_MVC.Data
 {
     public class DbSeeder
     {
-        public static void Seed(PeliculaDbContext context)
+        public static async Task Seed(PeliculaDbContext context, UserManager<Usuario> userManager, RoleManager<IdentityRole> roleManager)
         {
             context.Database.EnsureCreated();
+
+            //crear rol Admin si no existe
+            if(!await roleManager.RoleExistsAsync("Admin"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+
+
+            //Crear usuario admin si no existe
+            var adminUser = await userManager.FindByEmailAsync("admin@admin.com");
+            if (adminUser == null) 
+            {
+                adminUser = new Usuario
+                {
+                    UserName = "admin@admin.com",
+                    Email = "admin@admin.com",
+                    Nombre = "Admin",
+                    Apellido = "Sistema",
+                    ImagenUrlPerfil = "/images/default-avatar.png"
+                };
+
+            }
+
+            var result = await userManager.CreateAsync(adminUser, "Admin123");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
+
 
 
 
